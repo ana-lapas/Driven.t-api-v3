@@ -1,4 +1,4 @@
-import { notFoundError, unauthorizedError } from '@/errors';
+import { cannotShowHotelsError, notFoundError, unauthorizedError } from '@/errors';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
 import hotelsRepository from '@/repositories/hotels-repository/index';
@@ -9,7 +9,7 @@ async function checkHotels(userId: number) {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if ((!ticket) || (ticket.status === "RESERVED") || (ticket.TicketType.isRemote) || (!ticket.TicketType.includesHotel)){
-    throw unauthorizedError();
+    throw cannotShowHotelsError();
   } 
 }
 
@@ -17,7 +17,7 @@ async function getAllHotels(userId: number) {
   await checkHotels(userId);
 
   const hotels = await hotelsRepository.getHotels();
-
+  if (!hotels) throw notFoundError();
   return hotels;
 }
 
