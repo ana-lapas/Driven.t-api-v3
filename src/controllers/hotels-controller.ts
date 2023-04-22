@@ -1,19 +1,19 @@
-import { NextFunction, Response } from 'express';
+import { error } from 'console';
+import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
-import { error } from 'console';
 import hotelService from '@/services/hotels-service';
 
-export async function getHotels(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+export async function getHotels(req: AuthenticatedRequest, res: Response): Promise<Response> {
   const { userId } = req;
   try {
     const hotels = await hotelService.getAllHotels(Number(userId));
     return res.status(httpStatus.OK).send(hotels);
-  } catch (err) {
-    if (error.name === "NotFoundError") {
+  } catch (error) {
+    if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    if (error.name === "CannotShowHotelsError") {
+    if (error.name === 'CannotShowHotelsError') {
       return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     }
   }
@@ -25,13 +25,13 @@ export async function getHotelsById(req: AuthenticatedRequest, res: Response) {
   try {
     const hotels = await hotelService.getHotelsById(Number(userId), Number(hotelId));
     return res.status(httpStatus.OK).send(hotels);
-  } catch (err) {
-    if (error.name === "NotFoundError") {
+  } catch (error) {
+    if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    if (error.name === "CannotShowHotelsError") {
+    if (error.name === 'CannotShowHotelsError') {
       return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     }
-    return res.sendStatus(httpStatus.BAD_REQUEST)
+    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }

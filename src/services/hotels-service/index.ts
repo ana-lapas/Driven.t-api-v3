@@ -5,12 +5,14 @@ import hotelsRepository from '@/repositories/hotels-repository/index';
 
 async function checkHotels(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
-  if (!enrollment) throw notFoundError();
+  if (!enrollment) {
+    throw notFoundError();
+  }
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
-  if ((!ticket) || (ticket.status === "RESERVED") || (ticket.TicketType.isRemote) || (!ticket.TicketType.includesHotel)){
+  if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw cannotShowHotelsError();
-  } 
+  }
 }
 
 async function getAllHotels(userId: number) {

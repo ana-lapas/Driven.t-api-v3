@@ -3,6 +3,7 @@ import { prisma } from '@/config';
 async function getHotels() {
   return prisma.hotel.findMany();
 }
+
 async function getHotelsRoomId(hotelId: number) {
   return prisma.hotel.findFirst({
     where: {
@@ -10,12 +11,13 @@ async function getHotelsRoomId(hotelId: number) {
     },
     include: {
       Rooms: true,
-    }
-  })
+    },
+  });
 }
+
 const hotelsRepository = {
   getHotels,
-  getHotelsRoomId
+  getHotelsRoomId,
 };
 
 export default hotelsRepository;
