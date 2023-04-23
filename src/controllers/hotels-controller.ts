@@ -33,6 +33,5 @@ export async function getHotelsById(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'CannotShowHotelsError') {
       return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     }
-    return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
