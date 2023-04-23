@@ -29,24 +29,7 @@ async function getAllHotels(userId: number) {
 }
 
 async function getHotelsById(userId: number, hotelId: number) {
-  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
-  if (!enrollment) {
-    throw notFoundError();
-  }
-
-  const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
-  if (!ticket) {
-    throw notFoundError();
-  }
-  if (ticket.status === 'RESERVED') {
-    throw cannotShowHotelsError();
-  }
-  if (ticket.TicketType.isRemote) {
-    throw cannotShowHotelsError();
-  }
-  if (!ticket.TicketType.includesHotel) {
-    throw cannotShowHotelsError();
-  }
+  await checkHotels(userId);
 
   const hotel = await hotelsRepository.getHotelsRoomId(hotelId);
   if (!hotel || hotel.Rooms.length === 0) {
